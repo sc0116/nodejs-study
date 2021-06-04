@@ -1,9 +1,8 @@
 var http = require('http')
-var qs = require('querystring')
 
-var db = require('./lib/db')
 var topic = require('./lib/topic')
 var crud = require('./lib/crud')
+var author = require('./lib/author')
 
 var app = http.createServer((request,response) => {
     var _url = request.url;
@@ -37,6 +36,21 @@ var app = http.createServer((request,response) => {
     }
     else if (pathname === '/delete-process') {
       crud.delete_process(request, response)
+    }
+    else if (pathname === '/author') {
+      author.home(request, response)
+    }
+    else if (pathname === '/author/create-process') {
+      author.create_process(request, response)
+    }
+    else if (pathname === '/author/update') {
+      author.update(request, response)
+    }
+    else if (pathname === '/author/update-process') {
+      author.update_process(request, response)
+    }
+    else if (pathname === '/author/delete-process') {
+      author.delete_process(request, response)
     }
     else {
       response.writeHead(404)
