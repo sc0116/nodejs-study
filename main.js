@@ -1,3 +1,44 @@
+const { request } = require('express')
+const express = require('express')
+const app = express()
+const port = 3000
+
+const topic = require('./lib/topic')
+const crud = require('./lib/crud')
+
+app.get('/', (req, res) => {
+  topic.home(req, res)
+})
+
+app.get('/page/:pageId', (req, res) => {
+  topic.page(req, res)
+})
+
+app.get('/create', (req, res) => {
+  crud.create(req, res)
+})
+
+app.post('/create-process', (req, res) => {
+  crud.create_process(req, res)
+})
+
+app.get('/update/:pageId', (req, res) => {
+  crud.update(req, res)
+})
+
+app.post('/update-process', (req, res) => {
+  crud.update_process(req, res)
+})
+
+app.post('/delete-process', (req, res) => {
+  crud.delete_process(req, res)
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+
+/*  Node.js 코드
 var http = require('http')
 
 var topic = require('./lib/topic')
@@ -58,3 +99,4 @@ var app = http.createServer((request,response) => {
     }
 })
 app.listen(3000)
+*/
