@@ -2,9 +2,24 @@ const { request } = require('express')
 const express = require('express')
 const app = express()
 const port = 3000
+const compression = require('compression')
 
+const db = require('./lib/db')
 const topic = require('./lib/topic')
 const crud = require('./lib/crud')
+
+app.use(express.urlencoded({
+  extended: false
+ }))
+app.use(compression())
+
+app.get('*', (req, res, next) => {
+  db.query(`SELECT * FROM topic`, (error, topics) => {
+    if (error) throw error
+    req.topics = topics
+    next()
+  }) 
+})
 
 app.get('/', (req, res) => {
   topic.home(req, res)
