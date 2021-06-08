@@ -4,11 +4,10 @@ const port = 3000
 const compression = require('compression')
 
 const db = require('./lib/db')
-const topic = require('./lib/topic')
-const author = require('./lib/author')
 
-const topicRouter = require('./routes/page')
-const authorRouter = require('./routes/pageAuthor')
+const indexRouter = require('./routes/index')
+const topicRouter = require('./routes/topic')
+const authorRouter = require('./routes/author')
 
 
 app.use(express.static('public'))
@@ -26,12 +25,9 @@ app.get('*', (req, res, next) => {
   }) 
 })
 
-app.use('/page', topicRouter)
-app.use('/pageAuthor', authorRouter)
-
-app.get('/', (req, res) => {
-  topic.home(req, res)
-})
+app.use('/', indexRouter)
+app.use('/topic', topicRouter)
+app.use('/author', authorRouter)
 
 app.use((req, res, next) => {
   res.status(404).send(`Sorry can't find that!!!`)
