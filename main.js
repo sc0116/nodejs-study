@@ -1,4 +1,3 @@
-const { request } = require('express')
 const express = require('express')
 const app = express()
 const port = 3000
@@ -6,8 +5,13 @@ const compression = require('compression')
 
 const db = require('./lib/db')
 const topic = require('./lib/topic')
-const crud = require('./lib/crud')
+const author = require('./lib/author')
 
+const topicRouter = require('./routes/page')
+const authorRouter = require('./routes/pageAuthor')
+
+
+app.use(express.static('public'))
 app.use(express.urlencoded({
   extended: false
  }))
@@ -16,37 +20,26 @@ app.use(compression())
 app.get('*', (req, res, next) => {
   db.query(`SELECT * FROM topic`, (error, topics) => {
     if (error) throw error
+
     req.topics = topics
     next()
   }) 
 })
 
+app.use('/page', topicRouter)
+app.use('/pageAuthor', authorRouter)
+
 app.get('/', (req, res) => {
   topic.home(req, res)
 })
 
-app.get('/page/:pageId', (req, res) => {
-  topic.page(req, res)
+app.use((req, res, next) => {
+  res.status(404).send(`Sorry can't find that!!!`)
 })
 
-app.get('/create', (req, res) => {
-  crud.create(req, res)
-})
-
-app.post('/create-process', (req, res) => {
-  crud.create_process(req, res)
-})
-
-app.get('/update/:pageId', (req, res) => {
-  crud.update(req, res)
-})
-
-app.post('/update-process', (req, res) => {
-  crud.update_process(req, res)
-})
-
-app.post('/delete-process', (req, res) => {
-  crud.delete_process(req, res)
+app.use((err, req, res, next) => {
+  console.err(err.stack)
+  res.status(500).send(`Something broke!!!`)
 })
 
 app.listen(port, () => {
