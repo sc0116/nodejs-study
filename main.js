@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 const compression = require('compression')
+const helmet = require('helmet')
 
 const db = require('./lib/db')
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({
   extended: false
  }))
 app.use(compression())
+app.use(helmet())
 
 app.get('*', (req, res, next) => {
   db.query(`SELECT * FROM topic`, (error, topics) => {
